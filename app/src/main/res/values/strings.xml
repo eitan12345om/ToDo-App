@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ToDo App</string>
+
+    <!--For menu-->
+    <string name="add_task">Add Circle</string>
+    <string name="settings">Settings</string>
+</resources>
