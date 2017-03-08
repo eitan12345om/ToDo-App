@@ -66,9 +66,10 @@ public class TaskActivity extends AppCompatActivity {
         sqLiteDatabase.close();
     }
 
+    // TODO: Change to delete by ID, not name
     public void deleteTask(View view) {
         View parent = (View) view.getParent();
-        TextView taskTextView = (TextView) parent.findViewById(R.id.task_title);
+        TextView taskTextView = (TextView) parent.findViewById(R.id.task_id);
         String task = taskTextView.getText().toString();
         SQLiteDatabase sqLiteDatabase = mHelper.getWritableDatabase();
         sqLiteDatabase.delete(TaskContract.TaskEntry.TABLE,
