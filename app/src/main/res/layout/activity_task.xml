@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#D4D4D4"
+    android:divider="@android:color/transparent"
+    android:dividerHeight="10.0sp"
     tools:context="com.simlerentertainment.todoapp.TaskActivity">
-
 
 </ListView>
