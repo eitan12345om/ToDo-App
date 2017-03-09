@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.simlerentertainment.todoapp.db.TaskContract;
 import com.simlerentertainment.todoapp.db.TaskDbHelper;
@@ -55,13 +56,21 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
     }
 
     public void addTaskAndLeave(View view) {
-        addTask();
-        backToMain();
-    }
-
-    public void addTask() {
+        // Get task description
         final EditText taskEditText = (EditText) findViewById(R.id.newTask);
         String task = taskEditText.getText().toString();
+
+        // Check if task was entered
+        if (task.trim().length() > 0) {
+            addTask(task);
+            backToMain();
+        }
+        else {
+            Toast.makeText(this, "Please enter a task", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void addTask(String task) {
         SQLiteDatabase sqLiteDatabase = mHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(TaskContract.TaskEntry.COL_TASK_TITLE, task);
