@@ -1,12 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list_todo"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#D4D4D4"
-    android:divider="@android:color/transparent"
-    android:dividerHeight="10.0sp"
     tools:context="com.simlerentertainment.todoapp.TaskActivity">
 
-</ListView>
+    <ListView
+        android:id="@+id/list_todo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp">
+
+    </ListView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:clickable="true"
+        android:src="@drawable/add_box"
+        app:elevation="4dp" />
+
+</RelativeLayout>

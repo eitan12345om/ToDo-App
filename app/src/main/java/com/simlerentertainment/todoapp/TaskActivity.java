@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,6 +21,9 @@ import com.simlerentertainment.todoapp.db.TaskContract;
 import com.simlerentertainment.todoapp.db.TaskDbHelper;
 
 import java.util.ArrayList;
+
+// TODO: Add calendar view to select date
+
 
 public class TaskActivity extends AppCompatActivity {
 
@@ -69,7 +73,7 @@ public class TaskActivity extends AppCompatActivity {
     // TODO: Change to delete by ID, not name
     public void deleteTask(View view) {
         View parent = (View) view.getParent();
-        TextView taskTextView = (TextView) parent.findViewById(R.id.task_id);
+        TextView taskTextView = (TextView) parent.findViewById(R.id.task_title);
         String task = taskTextView.getText().toString();
         SQLiteDatabase sqLiteDatabase = mHelper.getWritableDatabase();
         sqLiteDatabase.delete(TaskContract.TaskEntry.TABLE,
