@@ -2,12 +2,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/add_task"
-        android:icon="@drawable/plus"
-        android:title="@string/add_task"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/settings"
         android:title="@string/settings"
         app:showAsAction="never" />

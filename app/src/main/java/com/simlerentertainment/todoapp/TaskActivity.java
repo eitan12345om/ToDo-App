@@ -31,6 +31,7 @@ public class TaskActivity extends AppCompatActivity {
     private TaskDbHelper mHelper;
     private ListView mTaskListView;
     private ArrayAdapter<String> mAdapter;
+    private FloatingActionButton myFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class TaskActivity extends AppCompatActivity {
 
         mHelper = new TaskDbHelper(this);
         mTaskListView = (ListView) findViewById(R.id.list_todo);
+        myFab = (FloatingActionButton) findViewById(R.id.fab);
 
         updateUI();
     }
@@ -83,6 +85,33 @@ public class TaskActivity extends AppCompatActivity {
         updateUI();
     }
 
+    public void addTask(View view) {
+        final EditText taskEditText = new EditText(this);
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setTitle("Add a new task")
+                .setMessage("What do you want to do next?")
+                .setView(taskEditText)
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String task = taskEditText.getText().toString();
+                        SQLiteDatabase sqLiteDatabase = mHelper.getWritableDatabase();
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put(TaskContract.TaskEntry.COL_TASK_TITLE, task);
+                        sqLiteDatabase.insertWithOnConflict(TaskContract.TaskEntry.TABLE,
+                                null,
+                                contentValues,
+                                SQLiteDatabase.CONFLICT_REPLACE);
+                        sqLiteDatabase.close();
+
+                        updateUI();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+        alertDialog.show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -92,32 +121,6 @@ public class TaskActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.add_task:
-                final EditText taskEditText = new EditText(this);
-                AlertDialog alertDialog = new AlertDialog.Builder(this)
-                        .setTitle("Add a new task")
-                        .setMessage("What do you want to do next?")
-                        .setView(taskEditText)
-                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                String task = taskEditText.getText().toString();
-                                SQLiteDatabase sqLiteDatabase = mHelper.getWritableDatabase();
-                                ContentValues contentValues = new ContentValues();
-                                contentValues.put(TaskContract.TaskEntry.COL_TASK_TITLE, task);
-                                sqLiteDatabase.insertWithOnConflict(TaskContract.TaskEntry.TABLE,
-                                        null,
-                                        contentValues,
-                                        SQLiteDatabase.CONFLICT_REPLACE);
-                                sqLiteDatabase.close();
-
-                                updateUI();
-                            }
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .create();
-                alertDialog.show();
-                return true;
             // TODO: Add actual logic to switch to settings
             case R.id.settings:
                 Log.d(TAG, "Settings");
