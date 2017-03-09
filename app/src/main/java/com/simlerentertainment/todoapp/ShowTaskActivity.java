@@ -2,13 +2,13 @@ package com.simlerentertainment.todoapp;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,16 +22,17 @@ import com.simlerentertainment.todoapp.db.TaskDbHelper;
 
 import java.util.ArrayList;
 
+import static com.simlerentertainment.todoapp.R.layout.task;
+
 // TODO: Add calendar view to select date
 
 
-public class TaskActivity extends AppCompatActivity {
+public class ShowTaskActivity extends AppCompatActivity {
 
-    private static final String TAG = "TaskActivity";
     private TaskDbHelper mHelper;
     private ListView mTaskListView;
     private ArrayAdapter<String> mAdapter;
-    private FloatingActionButton myFab;
+    private FloatingActionButton mFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,15 @@ public class TaskActivity extends AppCompatActivity {
 
         mHelper = new TaskDbHelper(this);
         mTaskListView = (ListView) findViewById(R.id.list_todo);
-        myFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+
+        mFab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Create intent for CreateTaskActivity
+                Intent intent = new Intent(getApplicationContext(), CreateTaskActivity.class);
+                startActivity(intent);
+            }
+        });
 
         updateUI();
     }
@@ -58,7 +67,7 @@ public class TaskActivity extends AppCompatActivity {
 
         if (mAdapter == null) {
             mAdapter = new ArrayAdapter<>(this,
-                    R.layout.task, // What view to use for the items
+                    task, // What view to use for the items
                     R.id.task_title, // Where to put the string of data
                     taskList); // Where to fo get the data
             mTaskListView.setAdapter(mAdapter);
@@ -85,33 +94,6 @@ public class TaskActivity extends AppCompatActivity {
         updateUI();
     }
 
-    public void addTask(View view) {
-        final EditText taskEditText = new EditText(this);
-        AlertDialog alertDialog = new AlertDialog.Builder(this)
-                .setTitle("Add a new task")
-                .setMessage("What do you want to do next?")
-                .setView(taskEditText)
-                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String task = taskEditText.getText().toString();
-                        SQLiteDatabase sqLiteDatabase = mHelper.getWritableDatabase();
-                        ContentValues contentValues = new ContentValues();
-                        contentValues.put(TaskContract.TaskEntry.COL_TASK_TITLE, task);
-                        sqLiteDatabase.insertWithOnConflict(TaskContract.TaskEntry.TABLE,
-                                null,
-                                contentValues,
-                                SQLiteDatabase.CONFLICT_REPLACE);
-                        sqLiteDatabase.close();
-
-                        updateUI();
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .create();
-        alertDialog.show();
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -123,7 +105,6 @@ public class TaskActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // TODO: Add actual logic to switch to settings
             case R.id.settings:
-                Log.d(TAG, "Settings");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

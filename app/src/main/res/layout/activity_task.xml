@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#D4D4D4"
-    tools:context="com.simlerentertainment.todoapp.TaskActivity">
+    tools:context="com.simlerentertainment.todoapp.ShowTaskActivity">
 
     <ListView
         android:id="@+id/list_todo"
