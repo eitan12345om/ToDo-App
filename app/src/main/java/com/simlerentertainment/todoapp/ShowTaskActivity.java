@@ -1,19 +1,15 @@
 package com.simlerentertainment.todoapp;
 
-import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,8 +20,7 @@ import java.util.ArrayList;
 
 import static com.simlerentertainment.todoapp.R.layout.task;
 
-// TODO: Add calendar view to select date
-
+// TODO: Add Date to database and task.xml
 
 public class ShowTaskActivity extends AppCompatActivity {
 
@@ -57,8 +52,12 @@ public class ShowTaskActivity extends AppCompatActivity {
     private void updateUI() {
         ArrayList<String> taskList = new ArrayList<>();
         SQLiteDatabase sqLiteDatabase = mHelper.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.query(TaskContract.TaskEntry.TABLE,
-                new String[]{TaskContract.TaskEntry._ID, TaskContract.TaskEntry.COL_TASK_TITLE},
+        Cursor cursor = sqLiteDatabase.query(
+                TaskContract.TaskEntry.TABLE,  // Name of the table to be queried
+                new String[]{  // Which columns are returned
+                        TaskContract.TaskEntry._ID,
+                        TaskContract.TaskEntry.COL_TASK_TITLE,
+                        TaskContract.TaskEntry.COL_TASK_DATE},
                 null, null, null, null, null);
         while (cursor.moveToNext()) {
             int index = cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TITLE);
@@ -69,7 +68,7 @@ public class ShowTaskActivity extends AppCompatActivity {
             mAdapter = new ArrayAdapter<>(this,
                     task, // What view to use for the items
                     R.id.task_title, // Where to put the string of data
-                    taskList); // Where to fo get the data
+                    taskList); // Where to get the data
             mTaskListView.setAdapter(mAdapter);
         } else {
             mAdapter.clear();
@@ -87,9 +86,10 @@ public class ShowTaskActivity extends AppCompatActivity {
         TextView taskTextView = (TextView) parent.findViewById(R.id.task_title);
         String task = taskTextView.getText().toString();
         SQLiteDatabase sqLiteDatabase = mHelper.getWritableDatabase();
-        sqLiteDatabase.delete(TaskContract.TaskEntry.TABLE,
-                TaskContract.TaskEntry.COL_TASK_TITLE + " = ?",
-                new String[]{task});
+        sqLiteDatabase.delete(
+                TaskContract.TaskEntry.TABLE,  // Where to delete
+                TaskContract.TaskEntry.COL_TASK_TITLE + " = ?",  // Boolean check
+                new String[]{task});  // What to delete
         sqLiteDatabase.close();
         updateUI();
     }
@@ -103,8 +103,9 @@ public class ShowTaskActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // TODO: Add actual logic to switch to settings
             case R.id.settings:
+//                TODO: Change Settings Menu
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

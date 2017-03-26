@@ -28,7 +28,7 @@
         android:layout_marginRight="16dp"
         android:clickable="true"
         android:onClick="addTask"
-        android:src="@drawable/add_box"
+        app:srcCompat="@drawable/add_box"
         app:elevation="4dp" />
 
 </RelativeLayout>
