@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
     android:background="@drawable/task_background"
-    android:descendantFocusability="blocksDescendants"
     android:clickable="false"
+    android:descendantFocusability="blocksDescendants"
     android:focusable="false"
     android:focusableInTouchMode="false"
     android:orientation="vertical"
@@ -25,7 +25,6 @@
         android:clickable="false"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:text="Hello"
         android:textSize="20sp" />
 
     <CheckBox
