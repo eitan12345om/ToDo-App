@@ -1,5 +1,8 @@
 package com.simlerentertainment.todoapp;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -67,8 +70,12 @@ public class ShowTaskActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 view.setSelected(true);
-                Log.d(TAG, ((TextView) view.findViewById(R.id.task_title)).getText().toString());
-                Toast.makeText(getApplicationContext(), "You long clicked", Toast.LENGTH_SHORT).show();
+                // Copies text to clipboard
+                String text = ((TextView) view.findViewById(R.id.task_title)).getText().toString();
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("text", text);
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(getApplicationContext(), "Text Copied", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
