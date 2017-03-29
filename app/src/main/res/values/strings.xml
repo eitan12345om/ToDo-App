@@ -2,12 +2,16 @@
     <string name="app_name">ToDo App</string>
     <string name="add_task_activity">New Task</string>
 
-    <!-- For task adding -->
+    <!-- For task adding-->
     <string name="task_helper">What do you want to do?</string>
     <string name="task_hint">Enter Task Here</string>
     <string name="date_helper">Due date:</string>
     <string name="date_hint">Pick a date</string>
     <string name="submit_task">Add Task</string>
+
+    <!-- For task updating -->
+    <string name="update_task">Update Task</string>
+    <string name="update_task_activity">Update Task</string>
 
     <!--For menu-->
     <string name="settings">Settings</string>

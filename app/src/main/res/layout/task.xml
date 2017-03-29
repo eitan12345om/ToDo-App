@@ -3,7 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
-    android:background="#FFFFFF"
+    android:background="@drawable/task_background"
+    android:descendantFocusability="blocksDescendants"
+    android:clickable="false"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
     android:orientation="vertical"
     android:paddingBottom="10dp"
     android:paddingTop="10dp">
@@ -18,6 +22,10 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="40dp"
         android:layout_marginStart="20dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="Hello"
         android:textSize="20sp" />
 
     <CheckBox
@@ -26,6 +34,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:checked="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:onClick="deleteTask" />
 
     <!-- TextView for showing date -->
@@ -34,7 +45,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/task_title"
-        android:visibility="gone"
         android:layout_alignStart="@+id/task_title"
-        android:layout_below="@+id/task_title" />
+        android:layout_below="@+id/task_title"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:visibility="gone" />
 </RelativeLayout>

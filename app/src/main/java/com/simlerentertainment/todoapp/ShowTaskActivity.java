@@ -6,12 +6,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.simlerentertainment.todoapp.db.TaskContract;
 import com.simlerentertainment.todoapp.db.TaskDbHelper;
@@ -24,6 +27,7 @@ import static com.simlerentertainment.todoapp.R.layout.task;
 
 public class ShowTaskActivity extends AppCompatActivity {
 
+    private final String TAG = "ShowTaskActivity";
     private TaskDbHelper mHelper;
     private ListView mTaskListView;
     private ArrayAdapter<String> mAdapter;
@@ -38,10 +42,42 @@ public class ShowTaskActivity extends AppCompatActivity {
         mTaskListView = (ListView) findViewById(R.id.list_todo);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
 
+//        mTaskListView.setOnClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Toast.makeText(view.getContext(), "You Clicked!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+        // On click allows user to update activity
+        mTaskListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d(TAG, "You clicked me!");
+                Intent intent = new Intent(getApplicationContext(), CreateTaskActivity.class);
+                intent.putExtra("Update", true);
+                // TODO: Change this to ID of task
+                intent.putExtra("Description", ((TextView) view.findViewById(R.id.task_title)).getText().toString());
+                startActivity(intent);
+            }
+        });
+
+        // Long click listener for copying task information
+        mTaskListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                view.setSelected(true);
+                Log.d(TAG, ((TextView) view.findViewById(R.id.task_title)).getText().toString());
+                Toast.makeText(getApplicationContext(), "You long clicked", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
         mFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Create intent for CreateTaskActivity
                 Intent intent = new Intent(getApplicationContext(), CreateTaskActivity.class);
+                intent.putExtra("Update", false);
                 startActivity(intent);
             }
         });

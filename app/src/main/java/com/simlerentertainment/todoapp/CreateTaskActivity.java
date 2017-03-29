@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,7 +24,12 @@ import java.util.GregorianCalendar;
 
 public class CreateTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
+    // Instance Variables
     private TaskDbHelper mHelper;
+    private EditText editTextDescription;
+    private EditText editTextDate;
+    private boolean updateTask;
+    private String oldDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +37,25 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         setContentView(R.layout.activity_create_task);
         setupActionBar();
 
+        Intent intent = getIntent();
+
         mHelper = new TaskDbHelper(this);
+        editTextDescription = (EditText) findViewById(R.id.newTask);
+        editTextDate = (EditText) findViewById(R.id.dueDate);
+
+
+        Bundle extras = intent.getExtras();
+        updateTask = extras.getBoolean("Update");
+        // Check if updating. If so, update text field
+        // TODO: ADD Date change, too
+        if (updateTask) {
+            editTextDescription.setText(extras.getString("Description"));
+            editTextDescription.setSelection(editTextDescription.getText().length());
+            oldDescription = extras.getString("Description");
+            Button button = (Button) findViewById(R.id.submit_task);
+            button.setText(R.string.update_task);
+            setTitle(R.string.update_task_activity);
+        }
     }
 
     private void setupActionBar() {
@@ -81,14 +105,10 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
 
     public void addTaskAndLeave(View view) {
         // Get task description
-        final EditText taskEditText = (EditText) findViewById(R.id.newTask);
-        String task = taskEditText.getText().toString();
+        String task = editTextDescription.getText().toString().trim();
 
         // Get task date
-        final EditText dateEditText = (EditText) findViewById(R.id.dueDate);
-        String taskDate = dateEditText.getText().toString();
-        // TODO: Use DATE information
-        Toast.makeText(this, "Date: " + taskDate, Toast.LENGTH_SHORT).show();
+        String taskDate = editTextDate.getText().toString();
 
         // Check if task was entered
         if (task.trim().length() > 0) {
@@ -105,10 +125,22 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         ContentValues contentValues = new ContentValues();
         contentValues.put(TaskContract.TaskEntry.COL_TASK_TITLE, task);
         contentValues.put(TaskContract.TaskEntry.COL_TASK_DATE, date);
-        sqLiteDatabase.insertWithOnConflict(TaskContract.TaskEntry.TABLE,
-                null,
-                contentValues,
-                SQLiteDatabase.CONFLICT_REPLACE);
+        if (!updateTask) {
+            sqLiteDatabase.insertWithOnConflict(
+                    TaskContract.TaskEntry.TABLE,
+                    null,
+                    contentValues,
+                    SQLiteDatabase.CONFLICT_REPLACE);
+        }
+        else {
+            sqLiteDatabase.updateWithOnConflict(
+                    TaskContract.TaskEntry.TABLE,
+                    contentValues,
+                    TaskContract.TaskEntry.COL_TASK_TITLE + " = ?", // TODO: Update to use ID
+                    new String[]{oldDescription}, // TODO: Update to use ID
+                    SQLiteDatabase.CONFLICT_REPLACE
+            );
+        }
         sqLiteDatabase.close();
     }
 
