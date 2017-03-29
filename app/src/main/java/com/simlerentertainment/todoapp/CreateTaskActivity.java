@@ -146,6 +146,8 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
 
     public void backToMain() {
         Intent intent = new Intent(getApplicationContext(), ShowTaskActivity.class);
+        // To stop ability to go back to this activity
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 }
