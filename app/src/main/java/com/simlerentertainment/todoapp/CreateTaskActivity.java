@@ -98,18 +98,6 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         }
     }
 
-
-//    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-//        int id = item.getItemId();
-//        if (id == android.R.id.home) {
-//            if (!super.onMenuItemSelected(featureId, item)) {
-//                NavUtils.navigateUpFromSameTask(this);
-//            }
-//            return true;
-//        }
-//        return super.onMenuItemSelected(featureId, item);
-//    }
-
     /**
      * Required for interface. Creates new instance of calendar
      */
@@ -137,14 +125,14 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
 
     public void addTaskAndLeave(View view) {
         // Get task description
-        String task = editTextDescription.getText().toString().trim();
+        String description = editTextDescription.getText().toString().trim();
 
         // Get task date
         String taskDate = editTextDate.getText().toString();
 
         // Check if task was entered
-        if (task.trim().length() > 0) {
-            addTask(task, taskDate);
+        if (description.trim().length() > 0) {
+            prepareTask(description, taskDate);
             backToMain();
         }
         else {
@@ -152,10 +140,10 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         }
     }
 
-    public void addTask(String task, String date) {
+    public void prepareTask(String description, String date) {
         SQLiteDatabase sqLiteDatabase = mHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(TaskContract.TaskEntry.COL_TASK_TITLE, task);
+        contentValues.put(TaskContract.TaskEntry.COL_TASK_TITLE, description);
         contentValues.put(TaskContract.TaskEntry.COL_TASK_DATE, date);
         if (!updateTask) {
             mHelper.createToDo(sqLiteDatabase, contentValues);
