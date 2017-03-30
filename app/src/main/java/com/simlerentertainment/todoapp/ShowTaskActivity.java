@@ -122,13 +122,12 @@ public class ShowTaskActivity extends AppCompatActivity {
         Log.d(TAG, String.valueOf(mTaskListView.getPositionForView(parent)));
 
         TextView taskTextView = (TextView) parent.findViewById(R.id.task_title);
-        String task = taskTextView.getText().toString();
+        String description = taskTextView.getText().toString();
         SQLiteDatabase sqLiteDatabase = mHelper.getWritableDatabase();
-        sqLiteDatabase.delete(
-                TaskContract.TaskEntry.TABLE,  // Where to delete
-                TaskContract.TaskEntry.COL_TASK_TITLE + " = ?",  // Boolean check
-                new String[]{task});  // What to delete
+
+        mHelper.deleteToDo(description, sqLiteDatabase);
         sqLiteDatabase.close();
+
         updateUI();
     }
 

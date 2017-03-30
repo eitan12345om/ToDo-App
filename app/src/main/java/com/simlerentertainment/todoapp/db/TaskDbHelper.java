@@ -37,13 +37,20 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    public void updateToDo(String oldDescription, SQLiteDatabase sqLiteDatabase,
-                           ContentValues contentValues) {
+    public void updateToDo(SQLiteDatabase sqLiteDatabase, ContentValues contentValues,
+                           String oldDescription) {
         sqLiteDatabase.updateWithOnConflict(
                 TaskContract.TaskEntry.TABLE,
                 contentValues,
                 TaskContract.TaskEntry.COL_TASK_TITLE + " = ?", // TODO: Update to use ID
                 new String[]{oldDescription}, // TODO: Update to use ID
                 SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    public void deleteToDo(String description, SQLiteDatabase sqLiteDatabase) {
+        sqLiteDatabase.delete(
+                TaskContract.TaskEntry.TABLE,  // Where to delete
+                TaskContract.TaskEntry.COL_TASK_TITLE + " = ?",  // Boolean check
+                new String[]{description}); // What to delete
     }
 }

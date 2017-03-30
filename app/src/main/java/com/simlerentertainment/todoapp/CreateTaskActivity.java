@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -149,7 +148,7 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
             mHelper.createToDo(sqLiteDatabase, contentValues);
         }
         else {
-            mHelper.updateToDo(oldDescription, sqLiteDatabase, contentValues);
+            mHelper.updateToDo(sqLiteDatabase, contentValues, oldDescription);
         }
         sqLiteDatabase.close();
     }
