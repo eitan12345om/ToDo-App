@@ -158,20 +158,10 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         contentValues.put(TaskContract.TaskEntry.COL_TASK_TITLE, task);
         contentValues.put(TaskContract.TaskEntry.COL_TASK_DATE, date);
         if (!updateTask) {
-            sqLiteDatabase.insertWithOnConflict(
-                    TaskContract.TaskEntry.TABLE,
-                    null,
-                    contentValues,
-                    SQLiteDatabase.CONFLICT_REPLACE);
+            mHelper.createToDo(sqLiteDatabase, contentValues);
         }
         else {
-            sqLiteDatabase.updateWithOnConflict(
-                    TaskContract.TaskEntry.TABLE,
-                    contentValues,
-                    TaskContract.TaskEntry.COL_TASK_TITLE + " = ?", // TODO: Update to use ID
-                    new String[]{oldDescription}, // TODO: Update to use ID
-                    SQLiteDatabase.CONFLICT_REPLACE
-            );
+            mHelper.updateToDo(oldDescription, sqLiteDatabase, contentValues);
         }
         sqLiteDatabase.close();
     }
