@@ -45,18 +45,12 @@ public class ShowTaskActivity extends AppCompatActivity {
         mTaskListView = (ListView) findViewById(R.id.list_todo);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
 
-//        mTaskListView.setOnClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Toast.makeText(view.getContext(), "You Clicked!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        updateUI();
 
         // On click allows user to update activity
         mTaskListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d(TAG, "You clicked me!");
                 Intent intent = new Intent(getApplicationContext(), CreateTaskActivity.class);
                 intent.putExtra("Update", true);
                 // TODO: Change this to ID of task
@@ -88,8 +82,6 @@ public class ShowTaskActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        updateUI();
     }
 
     private void updateUI() {
@@ -126,6 +118,9 @@ public class ShowTaskActivity extends AppCompatActivity {
     // TODO: Change to delete by ID, not name
     public void deleteTask(View view) {
         View parent = (View) view.getParent();
+
+        Log.d(TAG, String.valueOf(mTaskListView.getPositionForView(parent)));
+
         TextView taskTextView = (TextView) parent.findViewById(R.id.task_title);
         String task = taskTextView.getText().toString();
         SQLiteDatabase sqLiteDatabase = mHelper.getWritableDatabase();
