@@ -4,7 +4,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,7 +18,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.simlerentertainment.todoapp.db.TaskContract;
 import com.simlerentertainment.todoapp.db.TaskDbHelper;
 
 import java.util.ArrayList;
@@ -33,7 +31,7 @@ public class ShowTaskActivity extends AppCompatActivity {
     private final String TAG = "ShowTaskActivity";
     private TaskDbHelper mHelper;
     private ListView mTaskListView;
-    private ArrayAdapter<String> mAdapter;
+    private ArrayAdapter<Task> mAdapter;
     private FloatingActionButton mFab;
 
     @Override
@@ -51,11 +49,18 @@ public class ShowTaskActivity extends AppCompatActivity {
         mTaskListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getApplicationContext(), CreateTaskActivity.class);
-                intent.putExtra("Update", true);
-                // TODO: Change this to ID of task
-                intent.putExtra("Description", ((TextView) view.findViewById(R.id.task_title)).getText().toString());
-                startActivity(intent);
+//                Intent intent = new Intent(getApplicationContext(), CreateTaskActivity.class);
+//                intent.putExtra("Update", true);
+//                // TODO: Change this to ID of task
+//                intent.putExtra("Description", ((TextView) view.findViewById(R.id.task_title)).getText().toString());
+//                startActivity(intent);
+
+                Task task = mAdapter.getItem(i);
+                Log.d(
+                        TAG,
+                        "ID: " + task.getID() +
+                                " Description: " + task.getDescription() +
+                                " Date: " + task.getDate());
             }
         });
 
@@ -85,19 +90,7 @@ public class ShowTaskActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        ArrayList<String> taskList = new ArrayList<>();
-        SQLiteDatabase sqLiteDatabase = mHelper.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.query(
-                TaskContract.TaskEntry.TABLE,  // Name of the table to be queried
-                new String[]{  // Which columns are returned
-                        TaskContract.TaskEntry._ID,
-                        TaskContract.TaskEntry.COL_TASK_TITLE,
-                        TaskContract.TaskEntry.COL_TASK_DATE},
-                null, null, null, null, null);
-        while (cursor.moveToNext()) {
-            int index = cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TITLE);
-            taskList.add(cursor.getString(index));
-        }
+        ArrayList<Task> taskList = mHelper.getToDoList();
 
         if (mAdapter == null) {
             mAdapter = new ArrayAdapter<>(this,
@@ -110,22 +103,18 @@ public class ShowTaskActivity extends AppCompatActivity {
             mAdapter.addAll(taskList);
             mAdapter.notifyDataSetChanged();
         }
-
-        cursor.close();
-        sqLiteDatabase.close();
     }
-
-    // TODO: Change to delete by ID, not name
+    
     public void deleteTask(View view) {
+        // Get ID of task
         View parent = (View) view.getParent();
+        int position = mTaskListView.getPositionForView(parent);
+        Task task = mAdapter.getItem(position);
+        String ID = String.valueOf(task.getID());
 
-        Log.d(TAG, String.valueOf(mTaskListView.getPositionForView(parent)));
-
-        TextView taskTextView = (TextView) parent.findViewById(R.id.task_title);
-        String description = taskTextView.getText().toString();
+        // Delete from database using ID
         SQLiteDatabase sqLiteDatabase = mHelper.getWritableDatabase();
-
-        mHelper.deleteToDo(description, sqLiteDatabase);
+        mHelper.deleteToDo(sqLiteDatabase, ID);
         sqLiteDatabase.close();
 
         updateUI();

@@ -15,6 +15,14 @@ public class Task {
     private String description;
     private String date;
 
+    // Constructor
+    public Task(int ID, String description, String date) {
+        this.ID = ID;
+        this.description = description;
+        this.date = date;
+    }
+
+    // Methods
     /**
      * @return ID of Task
      */
@@ -55,5 +63,32 @@ public class Task {
      */
     public void setDate(String date) {
         this.date = date;
+    }
+
+    /**
+     * @param other is the object to compare to
+     * @return true if equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) {
+            return false;
+        }
+        if (this.getClass() != other.getClass()) {
+            return false;
+        }
+
+        Task o = (Task) other;
+
+        return ID == o.ID && description.equals(o.description) && date.equals(o.date);
+    }
+
+    /**
+     * @return description of task
+     * TODO: Eventually delete this method
+     */
+    @Override
+    public String toString() {
+        return getDescription();
     }
 }
