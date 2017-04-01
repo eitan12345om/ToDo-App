@@ -9,7 +9,7 @@
     tools:context="com.simlerentertainment.todoapp.CreateTaskActivity">
 
     <TextView
-        android:id="@+id/newTask_helper"
+        android:id="@+id/taskDescription_helper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -20,12 +20,12 @@
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/newTask"
+        android:id="@+id/taskDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/newTask_helper"
+        android:layout_below="@+id/taskDescription_helper"
         android:layout_marginEnd="50dp"
         android:layout_marginRight="50dp"
         android:hint="@string/task_hint"
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/newTask"
+        android:layout_below="@+id/taskDescription"
         android:layout_marginTop="25dp"
         android:text="@string/date_helper"
         android:textColor="@color/colorPrimary"

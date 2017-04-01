@@ -44,12 +44,12 @@ public class TaskDbHelper extends SQLiteOpenHelper {
     }
 
     public void updateToDo(SQLiteDatabase sqLiteDatabase, ContentValues contentValues,
-                           String oldDescription) {
+                           String ID) {
         sqLiteDatabase.updateWithOnConflict(
                 TaskContract.TaskEntry.TABLE,
                 contentValues,
-                TaskContract.TaskEntry.COL_TASK_TITLE + " = ?", // TODO: Update to use ID
-                new String[]{oldDescription}, // TODO: Update to use ID
+                TaskContract.TaskEntry._ID + " = ?",
+                new String[]{ID},
                 SQLiteDatabase.CONFLICT_REPLACE);
     }
 

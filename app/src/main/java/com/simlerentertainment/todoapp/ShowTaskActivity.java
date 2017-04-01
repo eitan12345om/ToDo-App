@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -49,18 +50,10 @@ public class ShowTaskActivity extends AppCompatActivity {
         mTaskListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Intent intent = new Intent(getApplicationContext(), CreateTaskActivity.class);
-//                intent.putExtra("Update", true);
-//                // TODO: Change this to ID of task
-//                intent.putExtra("Description", ((TextView) view.findViewById(R.id.task_title)).getText().toString());
-//                startActivity(intent);
-
-                Task task = mAdapter.getItem(i);
-                Log.d(
-                        TAG,
-                        "ID: " + task.getID() +
-                                " Description: " + task.getDescription() +
-                                " Date: " + task.getDate());
+                Intent intent = new Intent(getApplicationContext(), CreateTaskActivity.class);
+                intent.putExtra("Update", true);
+                intent.putExtra("Task", mAdapter.getItem(i));
+                startActivity(intent);
             }
         });
 
@@ -104,20 +97,20 @@ public class ShowTaskActivity extends AppCompatActivity {
             mAdapter.notifyDataSetChanged();
         }
     }
-    
-    public void deleteTask(View view) {
-        // Get ID of task
-        View parent = (View) view.getParent();
-        int position = mTaskListView.getPositionForView(parent);
-        Task task = mAdapter.getItem(position);
-        String ID = String.valueOf(task.getID());
 
+    public void deleteTask(View view) {
         // Delete from database using ID
         SQLiteDatabase sqLiteDatabase = mHelper.getWritableDatabase();
-        mHelper.deleteToDo(sqLiteDatabase, ID);
+        mHelper.deleteToDo(sqLiteDatabase, getIDFromView((View) view.getParent()));
         sqLiteDatabase.close();
 
         updateUI();
+    }
+
+    private String getIDFromView(View view) {
+        int position = mTaskListView.getPositionForView(view);
+        Task task = mAdapter.getItem(position);
+        return String.valueOf(task.getID());
     }
 
     @Override

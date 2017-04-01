@@ -1,14 +1,14 @@
 package com.simlerentertainment.todoapp;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * @author Eitan
  *
  * This class models a Task
  */
-
-// TODO: Implement Task Class
-
-public class Task {
+public class Task implements Parcelable {
 
     // Instance variables
     private int ID;
@@ -90,5 +90,37 @@ public class Task {
     @Override
     public String toString() {
         return getDescription();
+    }
+
+    /**
+     * Parcel constructor and methods
+     */
+    private Task(Parcel in) {
+        ID = in.readInt();
+        description = in.readString();
+        date = in.readString();
+    }
+
+    public static final Parcelable.Creator<Task> CREATOR
+            = new Parcelable.Creator<Task>() {
+        public Task createFromParcel(Parcel in) {
+            return new Task(in);
+        }
+
+        public Task[] newArray(int size) {
+            return new Task[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(ID);
+        parcel.writeString(description);
+        parcel.writeString(date);
     }
 }

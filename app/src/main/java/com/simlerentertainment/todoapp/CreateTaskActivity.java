@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -27,10 +28,10 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
 
     // Instance Variables
     private TaskDbHelper mHelper;
-    private EditText editTextDescription;
-    private EditText editTextDate;
+    private EditText editTextDescription, editTextDate;
+    private String ID;
+    private Task task;
     private boolean updateTask;
-    private String oldDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +42,22 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         Intent intent = getIntent();
 
         mHelper = new TaskDbHelper(this);
-        editTextDescription = (EditText) findViewById(R.id.newTask);
+        editTextDescription = (EditText) findViewById(R.id.taskDescription);
         editTextDate = (EditText) findViewById(R.id.dueDate);
 
 
         Bundle extras = intent.getExtras();
         updateTask = extras.getBoolean("Update");
-        // Check if updating. If so, update text field
-        // TODO: ADD Date change, too
+        // Check if updating. If so, update interface to reflect update state
         if (updateTask) {
-            editTextDescription.setText(extras.getString("Description"));
-            editTextDescription.setSelection(editTextDescription.getText().length());
-            oldDescription = extras.getString("Description");
+            task = extras.getParcelable("Task");
+
+            // Update input fields
+            editTextDescription.setText(task.getDescription());
+            editTextDescription.setSelection(task.getDescription().length());
+            editTextDate.setText(task.getDate());
+
+            ID = String.valueOf(task.getID());
             Button button = (Button) findViewById(R.id.submit_task);
             button.setText(R.string.update_task);
             setTitle(R.string.update_task_activity);
@@ -130,7 +135,7 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         String taskDate = editTextDate.getText().toString();
 
         // Check if task was entered
-        if (description.trim().length() > 0) {
+        if (description.length() > 0) {
             prepareTask(description, taskDate);
             backToMain();
         }
@@ -148,7 +153,7 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
             mHelper.createToDo(sqLiteDatabase, contentValues);
         }
         else {
-            mHelper.updateToDo(sqLiteDatabase, contentValues, oldDescription);
+            mHelper.updateToDo(sqLiteDatabase, contentValues, ID);
         }
         sqLiteDatabase.close();
     }
