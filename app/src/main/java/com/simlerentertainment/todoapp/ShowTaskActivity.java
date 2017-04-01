@@ -7,14 +7,19 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +27,7 @@ import android.widget.Toast;
 import com.simlerentertainment.todoapp.db.TaskDbHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.simlerentertainment.todoapp.R.layout.task;
 
@@ -128,6 +134,28 @@ public class ShowTaskActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    private class CustomAdapter<T> extends ArrayAdapter<T> {
+        // Constructors
+        public CustomAdapter(@NonNull Context context, @LayoutRes int resource) {
+            super(context, resource);
+        }
+
+        public CustomAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId) {
+            super(context, resource, textViewResourceId);
+        }
+
+        public CustomAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<T> objects) {
+            super(context, resource, objects);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            return null; // Change
         }
     }
 }
