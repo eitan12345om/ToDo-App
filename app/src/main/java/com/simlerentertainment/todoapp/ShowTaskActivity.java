@@ -10,6 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -157,8 +159,15 @@ public class ShowTaskActivity extends AppCompatActivity {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
+            String dueDate = ((Task) objects.get(position)).getDate();
             holder.description.setText(((Task) objects.get(position)).getDescription());
-            holder.date.setText(((Task) objects.get(position)).getDate());
+            if (dueDate.equals("")) {
+                holder.date.setVisibility(View.GONE);
+            } else {
+                holder.date.setVisibility(View.VISIBLE);
+                holder.date.setText(String.format(getResources().getString(R.string.date_filler), dueDate));
+            }
+
             return convertView;
         }
 
