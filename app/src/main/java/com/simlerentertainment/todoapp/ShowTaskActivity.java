@@ -6,20 +6,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +24,6 @@ import android.widget.Toast;
 import com.simlerentertainment.todoapp.db.TaskDbHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.simlerentertainment.todoapp.R.layout.task;
 
@@ -38,7 +34,7 @@ public class ShowTaskActivity extends AppCompatActivity {
     private final String TAG = "ShowTaskActivity";
     private TaskDbHelper mHelper;
     private ListView mTaskListView;
-    private ArrayAdapter<Task> mAdapter;
+    private CustomAdapter<Task> mAdapter;
     private FloatingActionButton mFab;
 
     @Override
@@ -92,9 +88,8 @@ public class ShowTaskActivity extends AppCompatActivity {
         ArrayList<Task> taskList = mHelper.getToDoList();
 
         if (mAdapter == null) {
-            mAdapter = new ArrayAdapter<>(this,
+            mAdapter = new CustomAdapter<>(this,
                     task, // What view to use for the items
-                    R.id.task_title, // Where to put the string of data
                     taskList); // Where to get the data
             mTaskListView.setAdapter(mAdapter);
         } else {
@@ -113,7 +108,7 @@ public class ShowTaskActivity extends AppCompatActivity {
         updateUI();
     }
 
-    private String getIDFromView(View view) {
+    private String getIDFromView(@NonNull View view) {
         int position = mTaskListView.getPositionForView(view);
         Task task = mAdapter.getItem(position);
         return String.valueOf(task.getID());
@@ -139,23 +134,37 @@ public class ShowTaskActivity extends AppCompatActivity {
 
 
     private class CustomAdapter<T> extends ArrayAdapter<T> {
-        // Constructors
-        public CustomAdapter(@NonNull Context context, @LayoutRes int resource) {
-            super(context, resource);
-        }
+        // Instance variable
+        ArrayList<T> objects;
+        LayoutInflater inflater;
 
-        public CustomAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId) {
-            super(context, resource, textViewResourceId);
-        }
-
-        public CustomAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<T> objects) {
+        // Constructor
+        private CustomAdapter(@NonNull Context context, int resource, @NonNull ArrayList<T> objects) {
             super(context, resource, objects);
+            inflater = LayoutInflater.from(context);
+            this.objects = objects;
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        @NonNull public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            ViewHolder holder;
+            if (convertView == null) {
+                holder = new ViewHolder();
+                convertView = inflater.inflate(R.layout.task, parent, false);
+                holder.description = (TextView) convertView.findViewById(R.id.task_title);
+                holder.date = (TextView) convertView.findViewById(R.id.task_date);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.description.setText(((Task) objects.get(position)).getDescription());
+            holder.date.setText(((Task) objects.get(position)).getDate());
+            return convertView;
+        }
 
-            return null; // Change
+        private class ViewHolder {
+            private TextView description;
+            private TextView date;
         }
     }
 }
