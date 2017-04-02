@@ -1,6 +1,7 @@
 package com.simlerentertainment.todoapp;
 
 import android.app.DatePickerDialog;
+import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,12 +26,14 @@ import com.simlerentertainment.todoapp.db.TaskDbHelper;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
-public class CreateTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class CreateTaskActivity extends AppCompatActivity implements
+        DatePickerDialog.OnDateSetListener, TimePickerFragment.TimePickerFiller {
 
     // Instance Variables
     private TaskDbHelper mHelper;
-    private EditText editTextDescription, editTextDate;
+    private EditText editTextDescription, editTextDate, editTextTime;
     private ImageButton deleteDateButton;
     private String ID;
     private Task task;
@@ -47,7 +50,8 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
 
         mHelper = new TaskDbHelper(this);
         editTextDescription = (EditText) findViewById(R.id.taskDescription);
-        editTextDate = (EditText) findViewById(R.id.dueDate);
+        editTextDate = (EditText) findViewById(R.id.due_date);
+        editTextTime = (EditText) findViewById(R.id.due_time);
         deleteDateButton = (ImageButton) findViewById(R.id.delete_date);
 
         Bundle extras = intent.getExtras();
@@ -125,7 +129,7 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
      */
     private void setDate(final Calendar calendar) {
         final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG);
-        ((EditText) findViewById(R.id.dueDate)).setText(dateFormat.format(calendar.getTime()));
+        ((EditText) findViewById(R.id.due_date)).setText(dateFormat.format(calendar.getTime()));
     }
 
     /**
@@ -139,6 +143,11 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
     public void deleteDate(View view) {
         editTextDate.setText("");
         deleteDateButton.setVisibility(View.GONE);
+    }
+
+    public void timePicker(View v) {
+        DialogFragment newFragment = new TimePickerFragment();
+        newFragment.show(getFragmentManager(), "timePicker");
     }
 
     public void addTaskAndLeave(View view) {
@@ -175,5 +184,10 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         // To stop ability to go back to this activity
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+    @Override
+    public void fillInTime(int hourOfDay, int minute) {
+        editTextTime.setText(String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute));
     }
 }

@@ -10,8 +10,9 @@
     <string name="task_hint">Enter Task Here</string>
     <string name="date_helper">Due date:</string>
     <string name="date_hint">Pick a date</string>
+    <string name="delete_date_description">Delete date</string>
+    <string name="time_hint">Pick a time</string>
     <string name="submit_task">Add Task</string>
-    <string name="cancel_description">Delete date</string>
 
     <!-- For task updating -->
     <string name="update_task">Update Task</string>
