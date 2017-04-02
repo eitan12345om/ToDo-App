@@ -9,12 +9,14 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.simlerentertainment.todoapp.db.TaskContract;
@@ -29,9 +31,11 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
     // Instance Variables
     private TaskDbHelper mHelper;
     private EditText editTextDescription, editTextDate;
+    private ImageButton deleteDateButton;
     private String ID;
     private Task task;
     private boolean updateTask;
+    private final String TAG = "CreateTaskActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +48,7 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         mHelper = new TaskDbHelper(this);
         editTextDescription = (EditText) findViewById(R.id.taskDescription);
         editTextDate = (EditText) findViewById(R.id.dueDate);
-
+        deleteDateButton = (ImageButton) findViewById(R.id.delete_date);
 
         Bundle extras = intent.getExtras();
         updateTask = extras.getBoolean("Update");
@@ -56,6 +60,10 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
             editTextDescription.setText(task.getDescription());
             editTextDescription.setSelection(task.getDescription().length());
             editTextDate.setText(task.getDate());
+
+            if (!TextUtils.isEmpty(editTextDate.getText())) {
+                deleteDateButton.setVisibility(View.VISIBLE);
+            }
 
             ID = String.valueOf(task.getID());
             Button button = (Button) findViewById(R.id.submit_task);
@@ -109,6 +117,7 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         Calendar calendar = new GregorianCalendar(year, month, day);
         setDate(calendar);
+        deleteDateButton.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -127,6 +136,11 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         datePickerFragment.show(getFragmentManager(), "date");
     }
 
+    public void deleteDate(View view) {
+        editTextDate.setText("");
+        deleteDateButton.setVisibility(View.GONE);
+    }
+
     public void addTaskAndLeave(View view) {
         // Get task description
         String description = editTextDescription.getText().toString().trim();
@@ -138,8 +152,7 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         if (description.length() > 0) {
             prepareTask(description, taskDate);
             backToMain();
-        }
-        else {
+        } else {
             Toast.makeText(this, "Please enter a task", Toast.LENGTH_SHORT).show();
         }
     }
@@ -151,8 +164,7 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         contentValues.put(TaskContract.TaskEntry.COL_TASK_DATE, date);
         if (!updateTask) {
             mHelper.createToDo(sqLiteDatabase, contentValues);
-        }
-        else {
+        } else {
             mHelper.updateToDo(sqLiteDatabase, contentValues, ID);
         }
         sqLiteDatabase.close();
