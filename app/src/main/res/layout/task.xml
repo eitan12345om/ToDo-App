@@ -55,4 +55,19 @@
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:textColor="@color/colorPrimary" />
+
+    <!-- TextView for showing time -->
+    <TextView
+        android:id="@+id/task_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/task_title"
+        android:layout_alignStart="@+id/task_title"
+        android:layout_below="@+id/task_date"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:textColor="@color/colorPrimary" />
 </RelativeLayout>

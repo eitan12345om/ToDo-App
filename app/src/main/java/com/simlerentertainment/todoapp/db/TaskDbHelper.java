@@ -9,10 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.simlerentertainment.todoapp.Task;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by Eitan on 3/7/2017.
+ * @author Eitan created on 3/7/2017.
  */
 
 public class TaskDbHelper extends SQLiteOpenHelper {
@@ -25,7 +24,8 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         String createTable = "CREATE TABLE " + TaskContract.TaskEntry.TABLE + " ( " +
                 TaskContract.TaskEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 TaskContract.TaskEntry.COL_TASK_TITLE + " TEXT NOT NULL, " +
-                TaskContract.TaskEntry.COL_TASK_DATE + " DATE);";
+                TaskContract.TaskEntry.COL_TASK_DATE + " DATE, " +
+                TaskContract.TaskEntry.COL_TASK_TIME + " TEXT);";
         sqLiteDatabase.execSQL(createTable);
     }
 
@@ -73,7 +73,8 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 new String[]{  // Which columns are returned
                         TaskContract.TaskEntry._ID,
                         TaskContract.TaskEntry.COL_TASK_TITLE,
-                        TaskContract.TaskEntry.COL_TASK_DATE},
+                        TaskContract.TaskEntry.COL_TASK_DATE,
+                        TaskContract.TaskEntry.COL_TASK_TIME},
                 null, null, null, null, null);
 
         // Iterate the results
@@ -81,7 +82,8 @@ public class TaskDbHelper extends SQLiteOpenHelper {
             int ID = Integer.valueOf(cursor.getString(0));
             String description = cursor.getString(1);
             String date = cursor.getString(2);
-            taskList.add(new Task(ID, description, date));
+            String time = cursor.getString(3);
+            taskList.add(new Task(ID, description, date, time));
         }
 
         cursor.close();

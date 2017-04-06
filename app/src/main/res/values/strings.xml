@@ -4,6 +4,7 @@
 
     <!-- For task showing -->
     <string name="date_filler">Due: %1$s</string>
+    <string name="time_filler">Time: %1$s</string>
 
     <!-- For task adding-->
     <string name="task_helper">What do you want to do?</string>
@@ -12,6 +13,7 @@
     <string name="date_hint">Pick a date</string>
     <string name="delete_date_description">Delete date</string>
     <string name="time_hint">Pick a time</string>
+    <string name="delete_time_description">Delete time</string>
     <string name="submit_task">Add Task</string>
 
     <!-- For task updating -->

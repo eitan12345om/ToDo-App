@@ -5,64 +5,48 @@ import android.os.Parcelable;
 
 /**
  * @author Eitan
- *
- * This class models a Task
+ *         <p>
+ *         This class models a Task
  */
 public class Task implements Parcelable {
 
     // Instance variables
     private int ID;
-    private String description;
-    private String date;
+    private String description, date, time;
 
     // Constructor
-    public Task(int ID, String description, String date) {
+    public Task(int ID, String description, String date, String time) {
         this.ID = ID;
         this.description = description;
         this.date = date;
+        this.time = time;
     }
 
     // Methods
+
     /**
      * @return ID of Task
      */
-    public int getID() {
+    int getID() {
         return ID;
-    }
-
-    /**
-     * @param ID sets new ID
-     */
-    public void setID(int ID) {
-        this.ID = ID;
     }
 
     /**
      * @return description of Task
      */
-    public String getDescription() {
+    String getDescription() {
         return description;
-    }
-
-    /**
-     * @param description sets new description
-     */
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     /**
      * @return date of Task
      */
-    public String getDate() {
+    String getDate() {
         return date;
     }
 
-    /**
-     * @param date sets new date
-     */
-    public void setDate(String date) {
-        this.date = date;
+    String getTime() {
+        return time;
     }
 
     /**
@@ -80,7 +64,8 @@ public class Task implements Parcelable {
 
         Task o = (Task) other;
 
-        return ID == o.ID && description.equals(o.description) && date.equals(o.date);
+        return ID == o.ID && description.equals(o.description) && date.equals(o.date)
+                && time.equals(o.time);
     }
 
     /**
@@ -99,6 +84,7 @@ public class Task implements Parcelable {
         ID = in.readInt();
         description = in.readString();
         date = in.readString();
+        time = in.readString();
     }
 
     public static final Parcelable.Creator<Task> CREATOR
@@ -122,5 +108,6 @@ public class Task implements Parcelable {
         parcel.writeInt(ID);
         parcel.writeString(description);
         parcel.writeString(date);
+        parcel.writeString(time);
     }
 }

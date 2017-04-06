@@ -61,6 +61,22 @@
         android:onClick="datePicker"
         android:textIsSelectable="false" />
 
+    <ImageButton
+        android:id="@+id/delete_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/due_date"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:background="#FFF"
+        android:contentDescription="@string/delete_date_description"
+        android:onClick="deleteDate"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_cancel_blue_24dp" />
+
     <Button
         android:id="@+id/submit_task"
         android:layout_width="wrap_content"
@@ -78,22 +94,6 @@
         android:textColor="@color/colorPrimary"
         android:textSize="16sp" />
 
-    <ImageButton
-        android:id="@+id/delete_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/due_date"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:background="#FFF"
-        android:contentDescription="@string/delete_date_description"
-        android:onClick="deleteDate"
-        android:visibility="gone"
-        app:srcCompat="@drawable/ic_cancel_blue_24dp" />
-
     <EditText
         android:id="@+id/due_time"
         android:layout_width="match_parent"
@@ -107,8 +107,25 @@
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:hint="@string/time_hint"
+        android:visibility="gone"
         android:inputType="none"
         android:onClick="timePicker"
         android:textIsSelectable="false" />
+
+    <ImageButton
+        android:id="@+id/delete_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/due_time"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:background="#FFF"
+        android:contentDescription="@string/delete_time_description"
+        android:onClick="deleteTime"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_cancel_blue_24dp" />
 
 </RelativeLayout>

@@ -11,7 +11,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -34,11 +33,9 @@ public class CreateTaskActivity extends AppCompatActivity implements
     // Instance Variables
     private TaskDbHelper mHelper;
     private EditText editTextDescription, editTextDate, editTextTime;
-    private ImageButton deleteDateButton;
+    private ImageButton deleteDateButton, deleteTimeButton;
     private String ID;
-    private Task task;
     private boolean updateTask;
-    private final String TAG = "CreateTaskActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,20 +50,27 @@ public class CreateTaskActivity extends AppCompatActivity implements
         editTextDate = (EditText) findViewById(R.id.due_date);
         editTextTime = (EditText) findViewById(R.id.due_time);
         deleteDateButton = (ImageButton) findViewById(R.id.delete_date);
+        deleteTimeButton = (ImageButton) findViewById(R.id.delete_time);
 
         Bundle extras = intent.getExtras();
         updateTask = extras.getBoolean("Update");
         // Check if updating. If so, update interface to reflect update state
         if (updateTask) {
-            task = extras.getParcelable("Task");
+            Task task = extras.getParcelable("Task");
 
             // Update input fields
             editTextDescription.setText(task.getDescription());
             editTextDescription.setSelection(task.getDescription().length());
             editTextDate.setText(task.getDate());
+            editTextTime.setText(task.getTime());
 
             if (!TextUtils.isEmpty(editTextDate.getText())) {
                 deleteDateButton.setVisibility(View.VISIBLE);
+                editTextTime.setVisibility(View.VISIBLE);
+            }
+
+            if (!TextUtils.isEmpty(editTextTime.getText())) {
+                deleteTimeButton.setVisibility(View.VISIBLE);
             }
 
             ID = String.valueOf(task.getID());
@@ -130,6 +134,7 @@ public class CreateTaskActivity extends AppCompatActivity implements
     private void setDate(final Calendar calendar) {
         final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG);
         ((EditText) findViewById(R.id.due_date)).setText(dateFormat.format(calendar.getTime()));
+        editTextTime.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -143,6 +148,8 @@ public class CreateTaskActivity extends AppCompatActivity implements
     public void deleteDate(View view) {
         editTextDate.setText("");
         deleteDateButton.setVisibility(View.GONE);
+        deleteTime(view);
+        editTextTime.setVisibility(View.GONE);
     }
 
     public void timePicker(View v) {
@@ -150,27 +157,31 @@ public class CreateTaskActivity extends AppCompatActivity implements
         newFragment.show(getFragmentManager(), "timePicker");
     }
 
-    public void addTaskAndLeave(View view) {
-        // Get task description
-        String description = editTextDescription.getText().toString().trim();
+    public void deleteTime(View view) {
+        editTextTime.setText("");
+        deleteTimeButton.setVisibility(View.GONE);
+    }
 
-        // Get task date
+    public void addTaskAndLeave(View view) {
+        String description = editTextDescription.getText().toString().trim();
         String taskDate = editTextDate.getText().toString();
+        String taskTime = editTextTime.getText().toString();
 
         // Check if task was entered
         if (description.length() > 0) {
-            prepareTask(description, taskDate);
+            prepareTask(description, taskDate, taskTime);
             backToMain();
         } else {
             Toast.makeText(this, "Please enter a task", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void prepareTask(String description, String date) {
+    private void prepareTask(String description, String date, String time) {
         SQLiteDatabase sqLiteDatabase = mHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(TaskContract.TaskEntry.COL_TASK_TITLE, description);
         contentValues.put(TaskContract.TaskEntry.COL_TASK_DATE, date);
+        contentValues.put(TaskContract.TaskEntry.COL_TASK_TIME, time);
         if (!updateTask) {
             mHelper.createToDo(sqLiteDatabase, contentValues);
         } else {
@@ -189,5 +200,12 @@ public class CreateTaskActivity extends AppCompatActivity implements
     @Override
     public void fillInTime(int hourOfDay, int minute) {
         editTextTime.setText(String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute));
+        deleteTimeButton.setVisibility(View.VISIBLE);
     }
+
+//    private String formatTime(int hourOfDay, int minute) {
+//        if (hourOfDay > 11) {
+//            hourOfDay = hourOfDay - 12
+//        }
+//    }
 }

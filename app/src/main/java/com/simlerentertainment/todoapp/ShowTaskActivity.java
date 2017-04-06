@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,11 +31,9 @@ import static com.simlerentertainment.todoapp.R.layout.task;
 
 public class ShowTaskActivity extends AppCompatActivity {
 
-    private final String TAG = "ShowTaskActivity";
     private TaskDbHelper mHelper;
     private ListView mTaskListView;
     private CustomAdapter<Task> mAdapter;
-    private FloatingActionButton mFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +42,7 @@ public class ShowTaskActivity extends AppCompatActivity {
 
         mHelper = new TaskDbHelper(this);
         mTaskListView = (ListView) findViewById(R.id.list_todo);
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton mFab = (FloatingActionButton) findViewById(R.id.fab);
 
         updateUI();
 
@@ -155,11 +152,13 @@ public class ShowTaskActivity extends AppCompatActivity {
                 convertView = inflater.inflate(R.layout.task, parent, false);
                 holder.description = (TextView) convertView.findViewById(R.id.task_title);
                 holder.date = (TextView) convertView.findViewById(R.id.task_date);
+                holder.time = (TextView) convertView.findViewById(R.id.task_time);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
             String dueDate = ((Task) objects.get(position)).getDate();
+            String dueTime = ((Task) objects.get(position)).getTime();
             holder.description.setText(((Task) objects.get(position)).getDescription());
             if (dueDate.equals("")) {
                 holder.date.setVisibility(View.GONE);
@@ -168,12 +167,18 @@ public class ShowTaskActivity extends AppCompatActivity {
                 holder.date.setText(String.format(getResources().getString(R.string.date_filler), dueDate));
             }
 
+            if (dueTime.equals("")) {
+                holder.time.setVisibility(View.GONE);
+            } else {
+                holder.time.setVisibility(View.VISIBLE);
+                holder.time.setText(String.format(getResources().getString(R.string.time_filler), dueTime));
+            }
+
             return convertView;
         }
 
         private class ViewHolder {
-            private TextView description;
-            private TextView date;
+            private TextView description, date, time;
         }
     }
 }
